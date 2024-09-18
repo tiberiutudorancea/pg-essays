@@ -86,19 +86,20 @@ export function EssayDetail({ url, title }: { url: string; title: string }) {
 
 function formatEssay(essayText: string, title: string): string {
   const paragraphs = essayText.split('\n\n');
-  
+  const readTime = Math.ceil(essayText.split(' ').length / 200);
+
   return `
   ${title}
 
-  ${paragraphs.map((p, index) => {
-    if (index === 0) {
-      return `<p style="font-size: 16px; color: ${Color.PrimaryText}; font-style: italic; border-left: 3px solid ${Color.Blue}; padding-left: 10px; margin-bottom: 20px;">${p}</p>`;
-    }
-    return `<p style="font-size: 14px; color: ${Color.SecondaryText}; line-height: 1.6; margin-bottom: 15px;">${p}</p>`;
-  }).join('\n\n')}
-  
-  <div style="margin-top: 30px; padding-top: 10px; border-top: 1px solid ${Color.SecondaryText}; font-size: 12px; color: ${Color.SecondaryText};">
-    Essay by Paul Graham | Read time: ${Math.ceil(essayText.split(' ').length / 200)} minutes
-  </div>
-    `;
+${paragraphs.map((p, index) => {
+  if (index === 0) {
+    return `> ${p}`;
   }
+  return p;
+}).join('\n\n')}
+
+---
+
+*Read time: ${readTime} minutes*
+  `;
+}
