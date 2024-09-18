@@ -1,0 +1,28 @@
+.essay-content {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--foreground-color);
+  }
+  
+  .essay-content h1 {
+    font-size: 24px;
+    margin-bottom: 1em;
+    color: var(--title-color);
+  }
+  
+  .essay-content blockquote {
+    border-left: 3px solid var(--primary-color);
+    padding-left: 1em;
+    margin-left: 0;
+    font-style: italic;
+  }
+  
+  .essay-content p {
+    margin-bottom: 0.5em; /* Reduced from 1.5em to create less space between fragments */
+  }
+  
+  /* New style for creating space between paragraphs */
+  .essay-content p + p {
+    margin-top: 1em;
+  }
