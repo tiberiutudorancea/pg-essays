@@ -1,4 +1,3 @@
-# PG Essays
 
 # PG Essays
 
