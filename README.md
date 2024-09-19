@@ -1,11 +1,18 @@
+#PG-Essays
 
-# PG Essays
+A Raycast extension to display essays by Paul Graham.
 
-Instant access to Paul Graham's insightful essays on startups, technology, and life.
+## How to use
 
-This extension allows you to:
-- Quickly search and browse Paul Graham's extensive collection of essays
-- Access key quotes and highlights from each essay
-- Stay updated with the latest publications
+1. Install the extension from the Raycast Extensions directory.
+2. Open the command palette and search for "PG-Essays".
+3. Select the essay you want to read.
+4. Enjoy!
 
-Gain wisdom from one of the tech industry's most influential thinkers, right at your fingertips.
+## Contributing
+
+Contributions are welcome! If you find a bug or have a suggestion, please open an issue or submit a pull request.
+
+## License
+
+This project is licensed under the MIT License. See the LICENSE file for details.
