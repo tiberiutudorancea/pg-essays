@@ -88,22 +88,6 @@ export function EssayDetail({ url, title }: { url: string; title: string }) {
   );
 }
 
-function EssayContent({ title, paragraphs }: { title: string; paragraphs: string[] }) {
-  return (
-    <List>
-      <List.Section title={title}>
-        {paragraphs.map((paragraph, index) => (
-          <List.Item
-            key={index}
-            title={paragraph}
-            accessories={index === 0 ? [{ icon: Icon.Quote }] : []}
-          />
-        ))}
-      </List.Section>
-    </List>
-  );
-}
-
 function formatEssay(essayText: string, title: string): { formattedContent: string, readTime: number } {
   const paragraphs = essayText.split('\n\n');
   const readTime = Math.ceil(essayText.split(' ').length / 200);
@@ -117,10 +101,6 @@ ${paragraphs.map((p, index) => {
   }
   return p;
 }).join('\n\n')}
-
----
-
-*Read time: ${readTime} minutes*
   `;
 
   return { formattedContent, readTime };
