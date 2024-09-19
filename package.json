@@ -3,7 +3,7 @@
   "name": "pg-essays",
   "title": "PG Essays",
   "description": "# PG Essays\n\nInstant access to Paul Graham's insightful essays on startups, technology, and life.\n\nThis extension allows you to:\n- Quickly search and browse Paul Graham's extensive collection of essays\n- Access key quotes and highlights from each essay\n- Save favorite essays for easy reference\n- Stay updated with the latest publications\n\nGain wisdom from one of the tech industry's most influential thinkers, right at your fingertips.\n",
-  "icon": "extension-icon.png",
+  "icon": "pg-extension-icon.png",
   "author": "tiberiutudorancea",
   "license": "MIT",
   "commands": [
