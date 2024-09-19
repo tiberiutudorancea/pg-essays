@@ -47,18 +47,21 @@ export default function Command() {
 
 // Essay detail component
 export function EssayDetail({ url, title }: { url: string; title: string }) {
-  const [content, setContent] = useState<string>('Loading...');
+  const [essayContent, setEssayContent] = useState<string>('Loading...');
+  const [readTime, setReadTime] = useState<number>(0);
 
   useEffect(() => {
     fetchEssay(url).then(essayText => {
-      const formattedContent = formatEssay(essayText, title);
-      setContent(formattedContent);
+      const { formattedContent, readTime } = formatEssay(essayText, title);
+      setEssayContent(formattedContent);
+      setReadTime(readTime);
     });
   }, [url, title]);
 
   return (
     <Detail
-      markdown={content}
+      navigationTitle={title}
+      markdown={essayContent}
       metadata={
         <Detail.Metadata>
           <Detail.Metadata.Label title="Author" text="Paul Graham" />
@@ -67,13 +70,14 @@ export function EssayDetail({ url, title }: { url: string; title: string }) {
             <Detail.Metadata.TagList.Item text="Technology" color={Color.Blue} />
             <Detail.Metadata.TagList.Item text="Philosophy" color={Color.Green} />
           </Detail.Metadata.TagList>
+          <Detail.Metadata.Label title="Read Time" text={`${readTime} minutes`} />
           <Detail.Metadata.Link title="Original Essay" target={url} text="Read on paulgraham.com" />
         </Detail.Metadata>
       }
       actions={
         <ActionPanel>
           <Action.CopyToClipboard
-            content={content}
+            content={essayContent}
             title="Copy Essay"
             icon={Icon.Clipboard}
           />
@@ -84,12 +88,28 @@ export function EssayDetail({ url, title }: { url: string; title: string }) {
   );
 }
 
-function formatEssay(essayText: string, title: string): string {
+function EssayContent({ title, paragraphs }: { title: string; paragraphs: string[] }) {
+  return (
+    <List>
+      <List.Section title={title}>
+        {paragraphs.map((paragraph, index) => (
+          <List.Item
+            key={index}
+            title={paragraph}
+            accessories={index === 0 ? [{ icon: Icon.Quote }] : []}
+          />
+        ))}
+      </List.Section>
+    </List>
+  );
+}
+
+function formatEssay(essayText: string, title: string): { formattedContent: string, readTime: number } {
   const paragraphs = essayText.split('\n\n');
   const readTime = Math.ceil(essayText.split(' ').length / 200);
 
-  return `
-  ${title}
+  const formattedContent = `
+# ${title}
 
 ${paragraphs.map((p, index) => {
   if (index === 0) {
@@ -102,4 +122,6 @@ ${paragraphs.map((p, index) => {
 
 *Read time: ${readTime} minutes*
   `;
+
+  return { formattedContent, readTime };
 }
