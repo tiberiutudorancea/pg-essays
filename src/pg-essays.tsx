@@ -19,129 +19,50 @@ async function fetchEssay(url: string): Promise<string> {
 
 // List of essays
 const essays = [
-  { title: "Founder Mode" , url: "https://www.paulgraham.com/foundermode.html"},
+  { title: "Founder Mode", url: "https://www.paulgraham.com/foundermode.html" },
+  { title: "How to Do Great Work", url: "https://www.paulgraham.com/greatwork.html" },
+  { title: "What I Worked On", url: "https://www.paulgraham.com/worked.html" },
+  // Add more essays here
 ];
 
 // Main command component
 export default function Command() {
+  const [selectedEssay, setSelectedEssay] = useState<string | null>(null);
+  const [essayContent, setEssayContent] = useState<string>("");
+
+  useEffect(() => {
+    if (selectedEssay) {
+      fetchEssay(selectedEssay).then(setEssayContent);
+    }
+  }, [selectedEssay]);
+
+  if (selectedEssay) {
+    return (
+      <Detail
+        markdown={essayContent}
+        actions={
+          <ActionPanel>
+            <Action title="Go Back" onAction={() => setSelectedEssay(null)} />
+            <Action.OpenInBrowser url={selectedEssay} />
+          </ActionPanel>
+        }
+      />
+    );
+  }
+
   return (
     <List>
-      {essays.map((essay) => (
+      {essays.map((essay, index) => (
         <List.Item
-          key={essay.url}
+          key={index}
           title={essay.title}
           actions={
             <ActionPanel>
-              <Action.Push
-                title="Read Essay"
-                target={<EssayDetail url={essay.url} title={essay.title} />}
-              />
+              <Action.OpenInBrowser url={essay.url} title={`Open in Browser`} />
             </ActionPanel>
           }
         />
       ))}
     </List>
   );
-}
-
-// Essay detail component
-export function EssayDetail({ url, title }: { url: string; title: string }) {
-  const [essayContent, setEssayContent] = useState<string>('Loading...');
-  const [readTime, setReadTime] = useState<number>(0);
-  const [publicationDate, setPublicationDate] = useState<string>('');
-
-  useEffect(() => {
-    fetchEssay(url).then(essayText => {
-      const { formattedContent, readTime, publicationDate } = formatEssay(essayText, title);
-      setEssayContent(formattedContent);
-      setReadTime(readTime);
-      setPublicationDate(publicationDate);
-    });
-  }, [url, title]);
-
-  return (
-    <Detail
-      navigationTitle={title}
-      markdown={essayContent}
-      metadata={
-        <Detail.Metadata>
-          <Detail.Metadata.Label title="Author" text="Paul Graham" />
-          {publicationDate && <Detail.Metadata.Label title="Published" text={publicationDate} />}
-          <Detail.Metadata.TagList title="Topics">
-            <Detail.Metadata.TagList.Item text="Startups" color={Color.Orange} />
-            <Detail.Metadata.TagList.Item text="Technology" color={Color.Blue} />
-            <Detail.Metadata.TagList.Item text="Philosophy" color={Color.Green} />
-          </Detail.Metadata.TagList>
-          <Detail.Metadata.Label title="Read Time" text={`${readTime} minutes`} />
-          <Detail.Metadata.Link title="Original Essay" target={url} text="Read on paulgraham.com" />
-        </Detail.Metadata>
-      }
-      actions={
-        <ActionPanel>
-          <Action.CopyToClipboard
-            content={essayContent}
-            title="Copy Essay"
-            icon={Icon.Clipboard}
-          />
-          <Action.OpenInBrowser url={url} title="Open in Browser" />
-        </ActionPanel>
-      }
-    />
-  );
-}
-
-
-
-function formatEssay(essayText: string, title: string): { formattedContent: string; readTime: number; publicationDate: string } {
-  const paragraphs = essayText.split('\n\n');
-  const readTime = Math.ceil(essayText.split(' ').length / 200);
-
-  // Extract publication date
-  const dateRegex = /^(January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{4}$/;
-  let publicationDate = '';
-  let contentStartIndex = 0;
-
-  for (let i = 0; i < paragraphs.length; i++) {
-    if (dateRegex.test(paragraphs[i].trim())) {
-      publicationDate = paragraphs[i].trim();
-      contentStartIndex = i + 1;
-      break;
-    }
-  }
-
-  // Identify the start of the notes section
-  let notesStartIndex = paragraphs.length;
-  for (let i = contentStartIndex; i < paragraphs.length; i++) {
-    if (paragraphs[i].trim().toLowerCase().startsWith('notes:') || 
-        paragraphs[i].trim().toLowerCase().startsWith('note:') ||
-        /^\[\d+\]/.test(paragraphs[i].trim())) { // Check for [1], [2], etc.
-      notesStartIndex = i;
-      break;
-    }
-  }
-
-  const mainContent = paragraphs.slice(contentStartIndex, notesStartIndex).map((p, index) => {
-    if (index === 0) {
-      return `> ${p}`;
-    }
-    const cleanedParagraph = p.replace(/^\s*(\d+\.|-)\s*/, '');
-    return cleanedParagraph + '  ';
-  }).join('\n\n');
-
-  const notes = paragraphs.slice(notesStartIndex).join('\n\n');
-
-  const formattedContent = `
-  ${title}
-
-${publicationDate ? `*${publicationDate}*\n\n` : ''}
-${mainContent}
-
-${notesStartIndex < paragraphs.length ? `\n\n---\n\n### Notes\n\n${notes}` : ''}
-  `;
-
-  return { formattedContent, readTime, publicationDate };
-}
-
-
-  return { formattedContent, readTime };
 }
