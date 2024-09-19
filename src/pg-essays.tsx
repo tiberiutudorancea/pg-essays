@@ -48,12 +48,14 @@ export default function Command() {
 export function EssayDetail({ url, title }: { url: string; title: string }) {
   const [essayContent, setEssayContent] = useState<string>('Loading...');
   const [readTime, setReadTime] = useState<number>(0);
+  const [publicationDate, setPublicationDate] = useState<string>('');
 
   useEffect(() => {
     fetchEssay(url).then(essayText => {
-      const { formattedContent, readTime } = formatEssay(essayText, title);
+      const { formattedContent, readTime, publicationDate } = formatEssay(essayText, title);
       setEssayContent(formattedContent);
       setReadTime(readTime);
+      setPublicationDate(publicationDate);
     });
   }, [url, title]);
 
@@ -64,6 +66,7 @@ export function EssayDetail({ url, title }: { url: string; title: string }) {
       metadata={
         <Detail.Metadata>
           <Detail.Metadata.Label title="Author" text="Paul Graham" />
+          {publicationDate && <Detail.Metadata.Label title="Published" text={publicationDate} />}
           <Detail.Metadata.TagList title="Topics">
             <Detail.Metadata.TagList.Item text="Startups" color={Color.Orange} />
             <Detail.Metadata.TagList.Item text="Technology" color={Color.Blue} />
@@ -87,20 +90,58 @@ export function EssayDetail({ url, title }: { url: string; title: string }) {
   );
 }
 
-function formatEssay(essayText: string, title: string): { formattedContent: string, readTime: number } {
+
+
+function formatEssay(essayText: string, title: string): { formattedContent: string; readTime: number; publicationDate: string } {
   const paragraphs = essayText.split('\n\n');
   const readTime = Math.ceil(essayText.split(' ').length / 200);
 
-  const formattedContent = `
-# ${title}
+  // Extract publication date
+  const dateRegex = /^(January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{4}$/;
+  let publicationDate = '';
+  let contentStartIndex = 0;
 
-${paragraphs.map((p, index) => {
-  if (index === 0) {
-    return `> ${p}`;
+  for (let i = 0; i < paragraphs.length; i++) {
+    if (dateRegex.test(paragraphs[i].trim())) {
+      publicationDate = paragraphs[i].trim();
+      contentStartIndex = i + 1;
+      break;
+    }
   }
-  return p;
-}).join('\n\n')}
+
+  // Identify the start of the notes section
+  let notesStartIndex = paragraphs.length;
+  for (let i = contentStartIndex; i < paragraphs.length; i++) {
+    if (paragraphs[i].trim().toLowerCase().startsWith('notes:') || 
+        paragraphs[i].trim().toLowerCase().startsWith('note:') ||
+        /^\[\d+\]/.test(paragraphs[i].trim())) { // Check for [1], [2], etc.
+      notesStartIndex = i;
+      break;
+    }
+  }
+
+  const mainContent = paragraphs.slice(contentStartIndex, notesStartIndex).map((p, index) => {
+    if (index === 0) {
+      return `> ${p}`;
+    }
+    const cleanedParagraph = p.replace(/^\s*(\d+\.|-)\s*/, '');
+    return cleanedParagraph + '  ';
+  }).join('\n\n');
+
+  const notes = paragraphs.slice(notesStartIndex).join('\n\n');
+
+  const formattedContent = `
+  ${title}
+
+${publicationDate ? `*${publicationDate}*\n\n` : ''}
+${mainContent}
+
+${notesStartIndex < paragraphs.length ? `\n\n---\n\n### Notes\n\n${notes}` : ''}
   `;
+
+  return { formattedContent, readTime, publicationDate };
+}
+
 
   return { formattedContent, readTime };
 }
