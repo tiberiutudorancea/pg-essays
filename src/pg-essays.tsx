@@ -22,15 +22,6 @@ async function fetchEssay(url: string): Promise<string> {
 }
 
 
-// List of essays
-const essays = [
-  { title: "Founder Mode", url: "https://www.paulgraham.com/foundermode.html" },
-  { title: "How to Do Great Work", url: "https://www.paulgraham.com/greatwork.html" },
-  { title: "What I Worked On", url: "https://www.paulgraham.com/worked.html" },
-  // Add more essays here
-];
-
-
 // Main command component
 export default function Command() {
   const [selectedEssay, setSelectedEssay] = useState<string | null>(null);
