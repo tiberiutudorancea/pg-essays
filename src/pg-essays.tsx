@@ -3,6 +3,10 @@ import { useState, useEffect } from "react";
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 
+
+
+
+
 // Fetch essay function
 async function fetchEssay(url: string): Promise<string> {
   try {
@@ -17,6 +21,7 @@ async function fetchEssay(url: string): Promise<string> {
   }
 }
 
+
 // List of essays
 const essays = [
   { title: "Founder Mode", url: "https://www.paulgraham.com/foundermode.html" },
@@ -24,6 +29,7 @@ const essays = [
   { title: "What I Worked On", url: "https://www.paulgraham.com/worked.html" },
   // Add more essays here
 ];
+
 
 // Main command component
 export default function Command() {
@@ -66,3 +72,4 @@ export default function Command() {
     </List>
   );
 }
+
