@@ -19,8 +19,7 @@ async function fetchEssay(url: string): Promise<string> {
 
 // List of essays
 const essays = [
-  { title: "How to Start a Startup", url: "http://www.paulgraham.com/start.html" },
-  { title: "Do Things that Don't Scale", url: "http://www.paulgraham.com/ds.html" },
+  { title: "Founder Mode" , url: "https://www.paulgraham.com/foundermode.html"},
 ];
 
 // Main command component
