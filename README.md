@@ -1,4 +1,4 @@
-#PG-Essays
+##PG-Essays
 
 A Raycast extension to display essays by Paul Graham.
 
