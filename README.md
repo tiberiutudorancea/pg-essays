@@ -12,7 +12,3 @@ A Raycast extension to display essays by Paul Graham.
 ## Contributing
 
 Contributions are welcome! If you find a bug or have a suggestion, please open an issue or submit a pull request.
-
-## License
-
-This project is licensed under the MIT License. See the LICENSE file for details.
