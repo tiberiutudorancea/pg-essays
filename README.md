@@ -1,6 +1,6 @@
 # PG Essays
 
-#PG-Essays
+
 
 Instant access to Paul Graham's insightful essays on startups, technology, and life.
 
